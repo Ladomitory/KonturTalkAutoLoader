@@ -4,60 +4,63 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.poi.EmptyFileException;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.io.*;
 
+import static ru.ladomitory.kontur.talkApi.util.PropertiesReader.getStringProperty;
+
 public class ExcelFileManager {
     private static final Logger logger = LogManager.getLogger(ExcelFileManager.class);
 
-    private static final String FILE_DIR = "result/";
-    private static final String FILE_TYPE = ".xlsx";
+    private static final String FILE_DIR = getStringProperty("fileManager.directory");
+    private static final String FILE_TYPE = getStringProperty("filaManager.file.type");
 
-    private final FileInputStream INPUT_FILE;
-    private final FileOutputStream OUTPUT_FILE;
+    private final File OUTPUT_FILE;
 
     protected XSSFWorkbook book;
 
     public ExcelFileManager(String fileName) {
         String fileFullName = FILE_DIR + fileName + FILE_TYPE;
-        File file = new File(fileFullName);
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            logger.log(Level.ERROR, "Error of create file");
-            throw new RuntimeException(e);
-        }
-        try {
-            INPUT_FILE = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
-            logger.log(Level.ERROR, "Input File \"" + fileName + "\" not found");
-            throw new RuntimeException(e);
-        }
-        logger.log(Level.INFO, "Init Input File \"" + fileName + "\"");
-        try {
-            OUTPUT_FILE = new FileOutputStream(file);
-        } catch (FileNotFoundException e) {
-            logger.log(Level.ERROR, "Output File \"" + fileName + "\" not found");
-            throw new RuntimeException(e);
-        }
-        logger.log(Level.INFO, "Init Output File \"" + fileName + "\"");
+        OUTPUT_FILE = new File(fileFullName);
+        //TODO: Сделать нормальное создание файлов (сейчас выпадает ошибка EmptyFileException
+//        try {
+//            inputFile.createNewFile();
+//        } catch (IOException e) {
+//            logger.log(Level.ERROR, "Error of create input file");
+//            throw new RuntimeException(e);
+//        }
+//        try {
+//            outputFile.createNewFile();
+//        } catch (IOException e) {
+//            logger.log(Level.ERROR, "Error of create output file");
+//            throw new RuntimeException(e);
+//        }
 
         try {
-            book = new XSSFWorkbook(INPUT_FILE);
-        } catch (IOException | EmptyFileException e) {
+            book = new XSSFWorkbook();
+        } catch (EmptyFileException e) {
             logger.log(Level.ERROR, "Error of init New Workbook");
             throw new RuntimeException(e);
         }
 
-        logger.log(Level.INFO, "ExcelFileManager is init");
+        logger.log(Level.INFO, "Instance of ExcelFileManager is init");
     }
 
-    public void close() {
+    public void save() {
         try {
-            book.write(OUTPUT_FILE);
+            book.write(new FileOutputStream(OUTPUT_FILE));
+        } catch (IOException e) {
+            logger.log(Level.ERROR, "Save error");
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void closeAndSave() {
+        try {
+            book.write(new FileOutputStream(OUTPUT_FILE));
             book.close();
+            logger.log(Level.INFO, "Successful close files");
         } catch (IOException e) {
             logger.log(Level.ERROR, "Error of close Workbook");
             throw new RuntimeException(e);
