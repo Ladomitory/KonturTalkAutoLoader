@@ -26,6 +26,8 @@ public class CentralManager {
         DATA_MANAGER = new KonturTalkDataManager();
         LOADER = new KonturTalkLoader(SPACE, TOKEN);
         JSON_CONVERTER = new Gson();
+
+        logger.log(Level.INFO, "Instance of CentralManager is init");
     }
 
     public void start() {
@@ -41,11 +43,11 @@ public class CentralManager {
                         DATA_MANAGER.addParticipant(participant, conferenceColumn);
                     }
                 } else {
-                    logger.log(Level.INFO, "ParticipantsReport is null");
+                    logger.log(Level.WARN, "ParticipantsReport is null");
                 }
             }
         } else {
-            logger.log(Level.INFO, "ConferenceHistory is null");
+            logger.log(Level.WARN, "ConferenceHistory is null");
         }
     }
 }

@@ -23,6 +23,8 @@ public class KonturTalkLoader extends HttpLoader {
 
     public KonturTalkLoader(String space, String authToken) {
         super(PROTOCOL + space + DOMAIN_NAME, authToken);
+
+        logger.log(Level.INFO, "Instance of KonturTalkLoader is init");
     }
 
     public String getConferenceHistory() {
@@ -56,7 +58,7 @@ public class KonturTalkLoader extends HttpLoader {
             System.out.println("Response: Status=" + response.statusCode());
             return response.body();
         } else {
-            logger.log(Level.INFO, "Response: Status=" + response.statusCode());
+            logger.log(Level.WARN, "Response: Status=" + response.statusCode());
             return null;
         }
     }
@@ -67,7 +69,7 @@ public class KonturTalkLoader extends HttpLoader {
             System.out.println("Response: Status=" + response.statusCode());
             return response.body();
         } else {
-            logger.log(Level.INFO, "Response: Status=" + response.statusCode());
+            logger.log(Level.WARN, "Response: Status=" + response.statusCode());
             return null;
         }
     }
