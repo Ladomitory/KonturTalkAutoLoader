@@ -23,7 +23,7 @@ public class ExcelFileManager {
     public ExcelFileManager(String fileName) {
         String fileFullName = FILE_DIR + fileName + FILE_TYPE;
         OUTPUT_FILE = new File(fileFullName);
-        //TODO: Сделать нормальное создание файлов (сейчас выпадает ошибка EmptyFileException
+        //TODO: Сделать нормальное создание файлов (сейчас выпадает ошибка EmptyFileException)
 //        try {
 //            inputFile.createNewFile();
 //        } catch (IOException e) {
