@@ -21,9 +21,11 @@ public class KonturTalkLoader extends HttpLoader {
     private static final String CONFERENCE_REPORTS_PATH = getStringProperty("loader.conferenceReport.path");
     private static final String PARTICIPANTS_PATH = getStringProperty("loader.conferenceReport.participants.path");
 
-    public KonturTalkLoader(String space, String authToken) {
-        super(PROTOCOL + space + DOMAIN_NAME, authToken);
+    private final String DOMAIN;
 
+    public KonturTalkLoader(String space, String authToken) {
+        super(authToken);
+        DOMAIN = PROTOCOL + space + DOMAIN_NAME;
         logger.log(Level.INFO, "Instance of KonturTalkLoader is init");
     }
 
@@ -53,15 +55,16 @@ public class KonturTalkLoader extends HttpLoader {
             array += "]";
             params.put("\"roomName\"", array);
         }
-        HttpResponse<String> response = createGetRequest(CONFERENCE_HISTORY_PATH, params);
+        System.out.println("Request: Location: " + DOMAIN + CONFERENCE_HISTORY_PATH);
+        HttpResponse<String> response = createGetRequest(DOMAIN + CONFERENCE_HISTORY_PATH, params);
         if (response.statusCode() == 200) {
             System.out.println("Response: Status=" + response.statusCode());
             return response.body();
         } else if (response.statusCode() == 302) {
             System.out.println("Response: Status=" + response.statusCode());
             if (response.headers().firstValue("Location").isPresent()) {
-                System.out.println("Response: New Location is present:" + response.headers().firstValue("Location").get());
-                response = createGetRequest(response.headers().firstValue("Location").get());
+                System.out.println("Response: New Location is present: " + response.headers().firstValue("Location").get());
+                response = createGetRequest(response.headers().firstValue("Location").get(), params);
                 if (response.statusCode() == 200) {
                     System.out.println("Response: Status=" + response.statusCode());
                     return response.body();
@@ -80,14 +83,15 @@ public class KonturTalkLoader extends HttpLoader {
     }
 
     public String getParticipantsReport(String conferenceKey) {
-        HttpResponse<String> response = createGetRequest(CONFERENCE_REPORTS_PATH + conferenceKey + PARTICIPANTS_PATH);
+        System.out.println("Request: Location: " + DOMAIN + CONFERENCE_HISTORY_PATH);
+        HttpResponse<String> response = createGetRequest(DOMAIN + CONFERENCE_REPORTS_PATH + conferenceKey + PARTICIPANTS_PATH);
         if (response.statusCode() == 200) {
             System.out.println("Response: Status=" + response.statusCode());
             return response.body();
         } else if (response.statusCode() == 302) {
             System.out.println("Response: Status=" + response.statusCode());
             if (response.headers().firstValue("Location").isPresent()) {
-                System.out.println("Response: New Location is present:" + response.headers().firstValue("Location").get());
+                System.out.println("Response: New Location is present: " + response.headers().firstValue("Location").get());
                 response = createGetRequest(response.headers().firstValue("Location").get());
                 if (response.statusCode() == 200) {
                     System.out.println("Response: Status=" + response.statusCode());

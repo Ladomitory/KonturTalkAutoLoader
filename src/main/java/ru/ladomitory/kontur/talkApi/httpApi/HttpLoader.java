@@ -14,23 +14,21 @@ import java.util.Map;
 
 public class HttpLoader {
     private final HttpClient CLIENT;
-    private final String DOMAIN;
     private final String AUTH_TOKEN;
 
-    public HttpLoader(String domain, String authToken) {
+    public HttpLoader(String authToken) {
         CLIENT = HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_2)
                 .build();
-        DOMAIN = domain;
         AUTH_TOKEN = authToken;
     }
 
-    protected HttpResponse<String> createGetRequest(String path, JSONMap params) {
+    protected HttpResponse<String> createGetRequest(String url, JSONMap params) {
         String paramsString = params.toJSONString();
 
         HttpRequest request = HttpRequest.newBuilder()
                 .version(HttpClient.Version.HTTP_2)
-                .uri(URI.create(DOMAIN + path))
+                .uri(URI.create(url))
                 .header("X-Auth-Token", AUTH_TOKEN)
                 .timeout(Duration.ofMinutes(5))
                 .method("GET", HttpRequest.BodyPublishers.ofString(paramsString))
