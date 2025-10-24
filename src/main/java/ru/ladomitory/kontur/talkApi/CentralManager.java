@@ -11,6 +11,9 @@ import ru.ladomitory.kontur.talkApi.jsonModel.ParticipantsReport;
 import ru.ladomitory.kontur.talkApi.kontur.KonturTalkDataManager;
 import ru.ladomitory.kontur.talkApi.kontur.KonturTalkLoader;
 
+import java.util.Date;
+import java.util.List;
+
 import static ru.ladomitory.kontur.talkApi.util.PropertiesReader.getStringProperty;
 
 public class CentralManager {
@@ -29,9 +32,12 @@ public class CentralManager {
 
         logger.log(Level.INFO, "Instance of CentralManager is init");
     }
-
     public void start() {
-        String historyJSON = LOADER.getConferenceHistory();
+        start(new Date(0), new Date(), 0, 100, null);
+    }
+
+    public void start(Date fromDate, Date toDate, int skip, int take, List<String> roomNames) {
+        String historyJSON = LOADER.getConferenceHistory(fromDate.toString(), toDate.toString(), skip, take, roomNames);
         if (historyJSON != null) {
             ConferenceHistory history = JSON_CONVERTER.fromJson(historyJSON, ConferenceHistory.class);
             for (Conference conference : history.getList()) {
