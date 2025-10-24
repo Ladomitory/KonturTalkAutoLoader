@@ -59,13 +59,18 @@ public class KonturTalkLoader extends HttpLoader {
             return response.body();
         } else if (response.statusCode() == 302) {
             System.out.println("Response: Status=" + response.statusCode());
-            System.out.println("Response: New Location:" + response.headers().firstValue("Location").toString());
-            response = createGetRequest(response.headers().firstValue("Location").toString());
-            if (response.statusCode() == 200) {
-                System.out.println("Response: Status=" + response.statusCode());
-                return response.body();
+            if (response.headers().firstValue("Location").isPresent()) {
+                System.out.println("Response: New Location is present:" + response.headers().firstValue("Location").get());
+                response = createGetRequest(response.headers().firstValue("Location").get());
+                if (response.statusCode() == 200) {
+                    System.out.println("Response: Status=" + response.statusCode());
+                    return response.body();
+                } else {
+                    logger.log(Level.WARN, "Response: Status=" + response.statusCode());
+                    return null;
+                }
             } else {
-                logger.log(Level.WARN, "Response: Status=" + response.statusCode());
+                logger.log(Level.WARN, "Response: New Location is not present");
                 return null;
             }
         } else {
@@ -81,13 +86,18 @@ public class KonturTalkLoader extends HttpLoader {
             return response.body();
         } else if (response.statusCode() == 302) {
             System.out.println("Response: Status=" + response.statusCode());
-            System.out.println("Response: New Location:" + response.headers().firstValue("Location").toString());
-            response = createGetRequest(response.headers().firstValue("Location").toString());
-            if (response.statusCode() == 200) {
-                System.out.println("Response: Status=" + response.statusCode());
-                return response.body();
+            if (response.headers().firstValue("Location").isPresent()) {
+                System.out.println("Response: New Location is present:" + response.headers().firstValue("Location").get());
+                response = createGetRequest(response.headers().firstValue("Location").get());
+                if (response.statusCode() == 200) {
+                    System.out.println("Response: Status=" + response.statusCode());
+                    return response.body();
+                } else {
+                    logger.log(Level.WARN, "Response: Status=" + response.statusCode());
+                    return null;
+                }
             } else {
-                logger.log(Level.WARN, "Response: Status=" + response.statusCode());
+                logger.log(Level.WARN, "Response: New Location is not present");
                 return null;
             }
         } else {
