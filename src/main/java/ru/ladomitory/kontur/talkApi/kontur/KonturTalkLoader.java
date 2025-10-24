@@ -57,6 +57,17 @@ public class KonturTalkLoader extends HttpLoader {
         if (response.statusCode() == 200) {
             System.out.println("Response: Status=" + response.statusCode());
             return response.body();
+        } else if (response.statusCode() == 302) {
+            System.out.println("Response: Status=" + response.statusCode());
+            System.out.println("Response: New Location:" + response.headers().firstValue("Location").toString());
+            response = createGetRequest(response.headers().firstValue("Location").toString());
+            if (response.statusCode() == 200) {
+                System.out.println("Response: Status=" + response.statusCode());
+                return response.body();
+            } else {
+                logger.log(Level.WARN, "Response: Status=" + response.statusCode());
+                return null;
+            }
         } else {
             logger.log(Level.WARN, "Response: Status=" + response.statusCode());
             return null;
@@ -68,6 +79,17 @@ public class KonturTalkLoader extends HttpLoader {
         if (response.statusCode() == 200) {
             System.out.println("Response: Status=" + response.statusCode());
             return response.body();
+        } else if (response.statusCode() == 302) {
+            System.out.println("Response: Status=" + response.statusCode());
+            System.out.println("Response: New Location:" + response.headers().firstValue("Location").toString());
+            response = createGetRequest(response.headers().firstValue("Location").toString());
+            if (response.statusCode() == 200) {
+                System.out.println("Response: Status=" + response.statusCode());
+                return response.body();
+            } else {
+                logger.log(Level.WARN, "Response: Status=" + response.statusCode());
+                return null;
+            }
         } else {
             logger.log(Level.WARN, "Response: Status=" + response.statusCode());
             return null;
