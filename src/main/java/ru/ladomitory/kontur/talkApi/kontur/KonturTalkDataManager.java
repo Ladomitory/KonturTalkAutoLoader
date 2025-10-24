@@ -36,7 +36,7 @@ public class KonturTalkDataManager extends ExcelDataManager {
     public void addParticipant(Participant participant, int conferenceColumnNumber) {
         int participantRow = findDoublesValueInColumnsAfter(PARTICIPANT_ID_COLUMN, PARTICIPANT_NAME_COLUMN,
                 participant.getId(), participant.getName(), VERTICAL_INDENT);
-        if (participantRow == -1) {
+        if (participantRow == VERTICAL_INDENT - 1) {
             participantRow = Math.max(findLastInColumnAfter(PARTICIPANT_ID_COLUMN, VERTICAL_INDENT),
                     findLastInColumnAfter(PARTICIPANT_NAME_COLUMN, VERTICAL_INDENT)) + 1;
             setCellValue(participantRow, PARTICIPANT_ID_COLUMN, participant.getId());
