@@ -6,14 +6,18 @@
 
     <groupId>ru.ladomitory.kontur.talkApi</groupId>
     <artifactId>kontur_talk_auto_loader</artifactId>
-    <version>1.0-ALPHA</version>
+    <version>${project.version}</version>
 
     <properties>
-        <maven.compiler.version>3.14.1</maven.compiler.version>
+        <project.name>KonturTalkAutoLoader</project.name>
+        <project.version>1.0-ALPHA-1</project.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.plugin.version>3.14.1</maven.compiler.plugin.version>
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
-        <maven.shade.version>3.6.1</maven.shade.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.jar.plugin.version>3.4.2</maven.jar.plugin.version>
+        <maven.shade.plugin.version>3.6.1</maven.shade.plugin.version>
+        <maven.buildnumber.plugin.version>3.2.1</maven.buildnumber.plugin.version>
         <apache.poi.version>5.4.1</apache.poi.version>
         <apache.logging.version>2.25.2</apache.logging.version>
         <google.json.version>2.13.2</google.json.version>
@@ -21,15 +25,16 @@
     </properties>
 
     <build>
-        <finalName>KonturTalkAutoLoader-1.0-ALPHA</finalName>
+        <finalName>${project.name}-${project.version}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.compiler.version}</version>
+                <version>${maven.compiler.plugin.version}</version>
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
@@ -41,25 +46,28 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven.jar.plugin.version}</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>ru.ladomitory.kontur.talkApi.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>${maven.shade.version}</version>
+                <version>${maven.shade.plugin.version}</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
                         </goals>
-                        <configuration>
-                            <transformers>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <manifestEntries>
-                                        <Main-Class>ru.ladomitory.kontur.talkApi.Main</Main-Class>
-                                        <Build-Number>1.0-ALPHA</Build-Number>
-                                    </manifestEntries>
-                                </transformer>
-                            </transformers>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
